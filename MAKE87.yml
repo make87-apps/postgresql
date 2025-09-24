@@ -24,6 +24,18 @@ config:
       type: string
       default: "02:00"
       description: Daily time to perform the backup in HH:MM format (24-hour).
+    postgres_user:
+      type: string
+      default: "postgres"
+      description: PostgreSQL user with sufficient privileges to perform backups.
+    postgres_password:
+      type: string
+      default: "yourpassword"
+      description: Password for the PostgreSQL user.
+    postgres_db:
+      type: string
+      default: "yourdatabase"
+      description: Name of the PostgreSQL database to back up.
 build:
   custom:
     dockerfile: Dockerfile
