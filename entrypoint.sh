@@ -44,7 +44,7 @@ if [ -n "$ACCESS_KEY" ] && [ -n "$SECRET_KEY" ]; then
   echo "$MIN $HOUR * * * /usr/local/bin/backup-db.sh" > /etc/crontabs/root
 
   echo "Configured backup: keep $NUM_BACKUPS backups, run daily at $BACKUP_TIME"
-  crond -f -d 8 &
+  crond -b -d 8
 else
   echo "No storage credentials in MAKE87_CONFIG → skipping backup cron"
 fi
