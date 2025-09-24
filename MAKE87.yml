@@ -1,47 +1,32 @@
 version: 1
 interfaces:
-  - name: zenoh
-    protocol: zenoh
-    default_port:
-      name: zenoh
-      protocol: TCP
-      target_port: 7447
-    publishers:
-      - name: outgoing_message
+  - name: postgres
+    protocol: postgres
+    servers:
+      - name: postgres-server
+        port:
+          name: postgres
+          protocol: TCP
+          target_port: 5432
         spec:
-          make87_message: make87_messages.text.PlainText
-        encoding: proto
-        config:
-          type: object
-          properties:
-            congestion_control:
-              type: string
-              enum: [ DROP, BLOCK ]
-              default: DROP
-            priority:
-              type: string
-              enum:
-                - REAL_TIME
-                - INTERACTIVE_HIGH
-                - INTERACTIVE_LOW
-                - DATA_HIGH
-                - DATA
-                - DATA_LOW
-                - BACKGROUND
-              default: DATA
-            express:
-              type: boolean
-              default: true
-            reliability:
-              type: string
-              enum: [ BEST_EFFORT, RELIABLE ]
-              default: RELIABLE
+          string: PostgreSQL/17
 container_config:
-  environment:
-    RUST_LOG: info
+  volumes:
+    - "~/postgres-data:/var/lib/postgresql/data:rw"
+config:
+  type: object
+  properties:
+    num_backups:
+      type: integer
+      default: 5
+      description: Number of backups to retain t ostore to cloud storage.
+    backup_time:
+      type: string
+      default: "02:00"
+      description: Daily time to perform the backup in HH:MM format (24-hour).
 build:
-  build_kit:
-    name: python3
-dev_build:
-  build_kit:
-    name: python3
+  custom:
+    dockerfile: Dockerfile
+    platforms:
+      - linux/amd64
+      - linux/arm64
